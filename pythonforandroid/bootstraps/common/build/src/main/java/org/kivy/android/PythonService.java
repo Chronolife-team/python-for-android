@@ -70,7 +70,7 @@ public class PythonService extends Service implements Runnable {
             return START_NOT_STICKY;
         }
 
-		startIntent = intent;
+        startIntent = intent;
         Bundle extras = intent.getExtras();
         androidPrivate = extras.getString("androidPrivate");
         androidArgument = extras.getString("androidArgument");
@@ -103,7 +103,7 @@ public class PythonService extends Service implements Runnable {
         Context context = getApplicationContext();
         Intent contextIntent = new Intent(context, PythonActivity.class);
         PendingIntent pIntent = PendingIntent.getActivity(context, 0, contextIntent,
-            PendingIntent.FLAG_UPDATE_CURRENT);
+                                PendingIntent.FLAG_UPDATE_CURRENT);
 
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
             notification = new Notification(
@@ -111,20 +111,20 @@ public class PythonService extends Service implements Runnable {
             try {
                 // prevent using NotificationCompat, this saves 100kb on apk
                 Method func = notification.getClass().getMethod(
-                    "setLatestEventInfo", Context.class, CharSequence.class,
-                    CharSequence.class, PendingIntent.class);
+                                  "setLatestEventInfo", Context.class, CharSequence.class,
+                                  CharSequence.class, PendingIntent.class);
                 func.invoke(notification, context, serviceTitle, serviceDescription, pIntent);
             } catch (NoSuchMethodException | IllegalAccessException |
-                     IllegalArgumentException | InvocationTargetException e) {
+                         IllegalArgumentException | InvocationTargetException e) {
             }
         } else {
             // for android 8+ we need to create our own channel
             // https://stackoverflow.com/questions/47531742/startforeground-fail-after-upgrade-to-android-8-1
             String NOTIFICATION_CHANNEL_ID = "org.kivy.p4a";    //TODO: make this configurable
             String channelName = "Background Service";                //TODO: make this configurable
-            NotificationChannel chan = new NotificationChannel(NOTIFICATION_CHANNEL_ID, channelName, 
+            NotificationChannel chan = new NotificationChannel(NOTIFICATION_CHANNEL_ID, channelName,
                 NotificationManager.IMPORTANCE_NONE);
-            
+
             chan.setLightColor(Color.BLUE);
             chan.setLockscreenVisibility(Notification.VISIBILITY_PRIVATE);
             NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
@@ -158,15 +158,14 @@ public class PythonService extends Service implements Runnable {
     @Override
     public void onTaskRemoved(Intent rootIntent) {
         super.onTaskRemoved(rootIntent);
-        stopSelf();
     }
 
     @Override
-    public void run(){
+    public void run() {
         String app_root =  getFilesDir().getAbsolutePath() + "/app";
         File app_root_file = new File(app_root);
         PythonUtil.loadLibraries(app_root_file,
-            new File(getApplicationInfo().nativeLibraryDir));
+                                 new File(getApplicationInfo().nativeLibraryDir));
         this.mService = this;
         nativeStart(
             androidPrivate, androidArgument,
@@ -178,8 +177,8 @@ public class PythonService extends Service implements Runnable {
 
     // Native part
     public static native void nativeStart(
-            String androidPrivate, String androidArgument,
-            String serviceEntrypoint, String pythonName,
-            String pythonHome, String pythonPath,
-            String pythonServiceArgument);
+        String androidPrivate, String androidArgument,
+        String serviceEntrypoint, String pythonName,
+        String pythonHome, String pythonPath,
+        String pythonServiceArgument);
 }
