@@ -399,7 +399,7 @@ public class SDLActivity extends Activity implements View.OnSystemUiVisibilityCh
         SDLActivity.mExitCalledFromJava = true;
         SDLActivity.nativeQuit();
 
-        Process.killProcess(Process.myPid());
+        android.os.Process.killProcess(android.os.Process.myPid());
 
         // Now wait for the SDL thread to quit
         if (SDLActivity.mSDLThread != null) {
