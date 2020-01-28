@@ -34,7 +34,7 @@ static PyObject *androidembed_log(PyObject *self, PyObject *args) {
   }
 
   if (!PyArg_ParseTuple(args, "s", &logstr)) {
-    return Py_RETURN_NONE;
+    Py_RETURN_NONE;
   }
   LOG(getenv("PYTHON_NAME"), logstr);
   Py_RETURN_NONE;
