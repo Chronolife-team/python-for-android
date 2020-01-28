@@ -28,8 +28,13 @@
 
 static PyObject *androidembed_log(PyObject *self, PyObject *args) {
   char *logstr = NULL;
+
+  if (args == NULL) {
+    Py_RETURN_NONE;
+  }
+
   if (!PyArg_ParseTuple(args, "s", &logstr)) {
-    return NULL;
+    return Py_RETURN_NONE;
   }
   LOG(getenv("PYTHON_NAME"), logstr);
   Py_RETURN_NONE;
@@ -127,7 +132,7 @@ int main(int argc, char *argv[]) {
                 env_value[strlen(env_value)-1] == '\r') {
               // Also remove windows line breaks (\r\n)
               env_value[strlen(env_value)-1] = '\0';
-            } 
+            }
           }
 
           // Set value:
