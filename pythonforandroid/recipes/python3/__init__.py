@@ -176,7 +176,7 @@ class Python3Recipe(TargetPythonRecipe):
         )
 
         env["CFLAGS"] = " ".join(
-            ["-fPIC", "-DANDROID", "-D__ANDROID_API__={}".format(self.ctx.ndk_api),]
+            ["-fPIC", "-DANDROID", "-D__ANDROID_API__={}".format(self.ctx.ndk_api)]
         )
 
         env["LDFLAGS"] = env.get("LDFLAGS", "")
