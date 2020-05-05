@@ -775,7 +775,7 @@ def run_pymodules_install(ctx, modules, project_dir=None,
         info('Install Cython in case one of the modules needs it to build')
         shprint(sh.bash, '-c', (
             "venv/bin/pip install Cython"
-        ), _env=copy.copy(base_env))
+        ), _env=dict(copy.copy(base_env)))
 
         # Get environment variables for build (with CC/compiler set):
         standard_recipe = CythonRecipe()
@@ -783,7 +783,7 @@ def run_pymodules_install(ctx, modules, project_dir=None,
         # (note: following line enables explicit -lpython... linker options)
         standard_recipe.call_hostpython_via_targetpython = False
         recipe_env = standard_recipe.get_recipe_env(ctx.archs[0])
-        env = copy.copy(base_env)
+        env = dict(copy.copy(base_env))
         env.update(recipe_env)
 
         # Make sure our build package dir is available, and the virtualenv
@@ -819,7 +819,7 @@ def run_pymodules_install(ctx, modules, project_dir=None,
                 "venv/bin/pip " +
                 "install -v --target '{0}' --no-deps -r requirements.txt"
             ).format(ctx.get_site_packages_dir().replace("'", "'\"'\"'")),
-                    _env=copy.copy(env))
+                    _env=dict(copy.copy(base_env)))
 
         # Afterwards, run setup.py if present:
         if project_dir is not None and (
