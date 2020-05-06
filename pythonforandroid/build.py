@@ -12,7 +12,6 @@ import subprocess
 from pythonforandroid.util import (
     current_directory,
     ensure_dir,
-    get_virtualenv_executable,
     BuildInterruptingException,
 )
 from pythonforandroid.logger import info, warning, info_notify, info_main, shprint
@@ -417,9 +416,7 @@ class Context:
         if not self.ccache:
             info("ccache is missing, the build will not be optimized in the " "future.")
         try:
-            subprocess.check_output(
-                ["python3", "-m", "cython", "--help",]
-            )
+            subprocess.check_output(["python3", "-m", "cython", "--help"])
         except subprocess.CalledProcessError:
             warning(
                 "Cython for python3 missing. If you are building for "
@@ -852,15 +849,7 @@ def run_pymodules_install(ctx, modules, project_dir=None, ignore_setup_py=False)
     # Use our hostpython to create the virtualenv
     host_python = sh.Command(ctx.hostpython)
     with current_directory(join(ctx.build_dir)):
-        # shprint(host_python, '-m', 'venv', 'venv')
-
-        shprint(
-            venv,
-            "--python=python{}".format(
-                ctx.python_recipe.major_minor_version_string.partition(".")[0]
-            ),
-            "venv",
-        )
+        shprint(host_python, "-m", "venv", "venv")
 
         # Prepare base environment and upgrade pip:
         base_env = dict(copy.copy(os.environ))
