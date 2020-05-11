@@ -31,6 +31,8 @@ import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ApplicationInfo;
 
+import android.os.Process;
+
 /**
     SDL Activity
 */
@@ -397,6 +399,8 @@ public class SDLActivity extends Activity implements View.OnSystemUiVisibilityCh
         // Send a quit message to the application
         SDLActivity.mExitCalledFromJava = true;
         SDLActivity.nativeQuit();
+
+        Process.killProcess(Process.myPid());
 
         // Now wait for the SDL thread to quit
         if (SDLActivity.mSDLThread != null) {
