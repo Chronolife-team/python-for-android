@@ -8,6 +8,7 @@ import re
 import sh
 import shutil
 import subprocess
+from contextlib import suppress
 
 from pythonforandroid.util import (
     current_directory,
@@ -90,8 +91,11 @@ class Context:
     """A build context. If anything will be built, an instance this class
     will be instantiated and used to hold all the build state."""
 
-    # Whether to build with debugging symbols
+    # Whether to make a debug or release build
     build_as_debuggable = False
+
+    # Whether to strip debug symbols in `.so` files
+    with_debug_symbols = False
 
     env = environ.copy()
     # the filepath of toolchain.py
@@ -697,14 +701,15 @@ def run_setuppy_install(ctx, project_dir, env=None):
         )
 
         # Compute & output the constraints we will use:
-        info("Contents that will be used for constraints.txt:")
-        constraints = subprocess.check_output(
-            [join(ctx.build_dir, "venv", "bin", "pip"), "freeze"], env=copy.copy(env)
-        )
-        try:
+        info('Contents that will be used for constraints.txt:')
+        constraints = subprocess.check_output([
+            join(
+                ctx.build_dir, "venv", "bin", "pip"
+            ),
+            "freeze"
+        ], env=copy.copy(env))
+        with suppress(AttributeError):
             constraints = constraints.decode("utf-8", "replace")
-        except AttributeError:
-            pass
         info(constraints)
 
         # Make sure all packages found are fixed in version
@@ -939,7 +944,7 @@ def run_pymodules_install(ctx, modules, project_dir=None, ignore_setup_py=False)
             info("No setup.py found in project directory: " + str(project_dir))
 
         # Strip object files after potential Cython or native code builds:
-        if not ctx.build_as_debuggable:
+        if not ctx.with_debug_symbols:
             standard_recipe.strip_object_files(
                 ctx.archs[0], env, build_dir=ctx.build_dir
             )
