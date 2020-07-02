@@ -66,13 +66,13 @@ public class HIDDeviceManager {
             String action = intent.getAction();
             if (action.equals(UsbManager.ACTION_USB_DEVICE_ATTACHED)) {
                 UsbDevice usbDevice = intent.getParcelableExtra(UsbManager.EXTRA_DEVICE);
-                handleUsbDeviceAttached(usbDevice);
+               //  handleUsbDeviceAttached(usbDevice);
             } else if (action.equals(UsbManager.ACTION_USB_DEVICE_DETACHED)) {
                 UsbDevice usbDevice = intent.getParcelableExtra(UsbManager.EXTRA_DEVICE);
-                handleUsbDeviceDetached(usbDevice);
+               //  handleUsbDeviceDetached(usbDevice);
             } else if (action.equals(HIDDeviceManager.ACTION_USB_PERMISSION)) {
                 UsbDevice usbDevice = intent.getParcelableExtra(UsbManager.EXTRA_DEVICE);
-                handleUsbDevicePermission(usbDevice, intent.getBooleanExtra(UsbManager.EXTRA_PERMISSION_GRANTED, false));
+                // handleUsbDevicePermission(usbDevice, intent.getBooleanExtra(UsbManager.EXTRA_PERMISSION_GRANTED, false));
             }
         }
     };
@@ -222,10 +222,10 @@ public class HIDDeviceManager {
         filter.addAction(UsbManager.ACTION_USB_DEVICE_ATTACHED);
         filter.addAction(UsbManager.ACTION_USB_DEVICE_DETACHED);
         filter.addAction(HIDDeviceManager.ACTION_USB_PERMISSION);
-        mContext.registerReceiver(mUsbBroadcast, filter);
+        // mContext.registerReceiver(mUsbBroadcast, filter);
 
         for (UsbDevice usbDevice : mUsbManager.getDeviceList().values()) {
-            handleUsbDeviceAttached(usbDevice);
+            // handleUsbDeviceAttached(usbDevice);
         }
     }
 
